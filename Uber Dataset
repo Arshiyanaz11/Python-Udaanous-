@@ -1,0 +1,14 @@
+Uber Pickups Analysis  
+
+Overview  
+This project analyzes Uber pickups data to find:  
+# 1. Analyze Which Month Has Maximum Uber Pickups 
+# 2. Analyze Hourly Rush in New York
+# 3. Most Active Uber Base Number
+# 4.Removing uber-raw-data-janjune
+Analysis   and Output  is done 
+- Max Pickups Month: Displayed in console.  
+- Peak Hour: Displayed in console.  
+
+Requirements  
+pip install pandas

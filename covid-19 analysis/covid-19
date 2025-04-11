@@ -1,0 +1,24 @@
+# COVID-19 Data Analysis
+
+This project analyzes global COVID-19 data from six datasets using Python and Jupyter Notebook. It includes data cleaning, trend analysis, and visualizations to identify the most affected countries.
+
+## Datasets Used
+- country_wise_latest.csv  
+- covid_19_clean_complete.csv  
+- day_wise.csv  
+- full_grouped.csv  
+- usa_country_wise.csv  
+- worldometer_data.csv
+
+## Objectives
+- Clean and prepare data for analysis
+- Analyze global and country-level COVID-19 trends
+- Perform exploratory data analysis (EDA)
+- Identify and visualize badly affected countries
+
+## Tools
+- Python (Pandas, NumPy)
+- Seaborn, Matplotlib
+- Jupyter Notebook
+
+

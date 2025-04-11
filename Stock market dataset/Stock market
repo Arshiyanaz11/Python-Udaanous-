@@ -1,0 +1,33 @@
+# 📈 Stock Market Dataset Analysis
+
+This project analyzes a 5-year dataset of multiple stocks to understand trends, price changes, and moving averages.
+
+## 📂 Dataset
+- Source: `S&P_resources/individual_stocks_5yr/`
+- Contains 500+ CSV files (one per stock)
+- Columns: `date`, `open`, `high`, `low`, `close`, `volume`, `Name`
+
+---
+
+## ✅ Tasks Completed
+
+1. **Data Collection**
+   - Combined all stock CSVs into one DataFrame
+   - Added a `stock_name` column for identification
+
+2. **Price Change Over Time**
+   - Plotted closing prices for individual stocks
+   - Observed trends over a 5-year period
+
+3. **Moving Averages**
+   - Calculated 50-day and 200-day moving averages
+   - Visualized trends with line plots
+   - Printed summary statistics for each stock
+
+---
+
+## 📊 Technologies Used
+- Python
+- Pandas
+- Matplotlib
+- Jupyter Notebook

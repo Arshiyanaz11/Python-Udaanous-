@@ -1,0 +1,154 @@
+import zipfile
+import os
+import pandas as pd
+
+#  Extract ZIP file
+zip_path = r'F:/INTERNSHIP/PYTHON/python project/S&P_resources.zip'
+extract_to = 'F:/INTERNSHIP/PYTHON/python project/extracted_files'
+
+with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+    zip_ref.extractall(extract_to)
+
+print("ZIP extraction completed.")
+
+# Walk through folders and read CSV files
+all_dataframes = []
+files_found = 0
+
+for root, dirs, files in os.walk(extract_to):
+    for filename in files:
+        if filename.lower().endswith('.csv'):
+            file_path = os.path.join(root, filename)
+            try:
+                df = pd.read_csv(file_path)
+                df['source_file'] = filename
+                all_dataframes.append(df)
+                files_found += 1
+            except Exception as e:
+                print(f"Error reading {filename}: {e}")
+
+print(f"Total CSV files found and read: {files_found}")
+
+# Combine all DataFrames and save to a CSV file
+if all_dataframes:
+    combined_df = pd.concat(all_dataframes, ignore_index=True)
+    output_path = 'F:/INTERNSHIP/PYTHON/python project/combined_stock_data.csv'
+    combined_df.to_csv(output_path, index=False)
+    print("Combined CSV file saved successfully.")
+    print(combined_df.head())
+else:
+    print("No CSV files found to combine.")
+
+expected_file_count = 505  
+if files_found == expected_file_count:
+    print(" All files imported successfully!")
+else:
+    print(f" Missing files! Only {files_found} out of {expected_file_count} found.")
+
+
+# checking missing values count
+missing_values = combined_df.isnull().sum()
+print(f"The missing values counts are as below:\n{missing_values}")
+
+# filling missing values of open column
+combined_df['open']=combined_df['open'].fillna(combined_df['open'].mean())
+
+# filling missing values of high column
+combined_df['high']=combined_df['high'].fillna(combined_df['high'].mean())
+
+# filling missing values of low column
+combined_df['low']=combined_df['low'].fillna(combined_df['low'].mean())
+
+
+import os
+import pandas as pd
+
+# Path to extracted folder (after unzipping the zip file)
+folder_path = r'F:/INTERNSHIP/PYTHON/python project/extracted_files'
+
+# Collect all data
+all_data = []
+for root, dirs, files in os.walk(folder_path):
+    for file in files:
+        if file.endswith('.csv'):
+            full_path = os.path.join(root, file)
+            df = pd.read_csv(full_path)
+            df['stock_name'] = file  #  Add this line to tag stock name
+            all_data.append(df)
+
+# Combine all into one DataFrame
+combined_df = pd.concat(all_data, ignore_index=True)
+
+# Convert 'date' column to datetime
+combined_df['date'] = pd.to_datetime(combined_df['date'])
+
+# Preview the dataframe
+print(combined_df.columns)
+
+
+import matplotlib.pyplot as plt
+
+# Get unique stock names
+stock_names = combined_df['stock_name'].unique()
+
+# Loop and plot each stock
+for stock in stock_names:
+    stock_df = combined_df[combined_df['stock_name'] == stock]
+
+    plt.figure(figsize=(10, 4))
+    plt.plot(stock_df['date'], stock_df['close'])
+    plt.title(f'{stock} - Closing Price Over Time')
+    plt.xlabel('Date')
+    plt.ylabel('Closing Price')
+    plt.grid()
+    plt.show()
+
+
+import matplotlib.pyplot as plt
+
+# Get unique stock names
+stock_names = combined_df['stock_name'].unique()
+
+# Loop through and show plots with summary
+for stock in stock_names[:5]:  # Limit to first 5 for now
+    stock_df = combined_df[combined_df['stock_name'] == stock]
+
+    # Print stock summary
+    print(f"\nStock: {stock}")
+    print(f"Total records: {len(stock_df)}")
+    print(f"Date range: {stock_df['date'].min().date()} to {stock_df['date'].max().date()}")
+    print(f"Highest Close: {stock_df['close'].max():.2f}")
+    print(f"Lowest Close: {stock_df['close'].min():.2f}")
+    print("-" * 50)
+
+
+for stock in stock_names[:5]:
+    stock_df = combined_df[combined_df['stock_name'] == stock].copy()
+    stock_df.sort_values(by='date', inplace=True)
+
+    # Moving Averages
+    stock_df['MA50'] = stock_df['close'].rolling(50).mean()
+    stock_df['MA200'] = stock_df['close'].rolling(200).mean()
+
+    # Summary
+    print(f"\nStock: {stock}")
+    print(f"Date Range: {stock_df['date'].min().date()} to {stock_df['date'].max().date()}")
+    print(f"Close Price: {stock_df['close'].iloc[-1]:.2f}")
+    print(f"50-Day MA: {stock_df['MA50'].iloc[-1]:.2f}")
+    print(f"200-Day MA: {stock_df['MA200'].iloc[-1]:.2f}")
+    print(f"High: {stock_df['close'].max():.2f} | Low: {stock_df['close'].min():.2f}")
+    print("-" * 40)
+
+    # Plot
+    plt.figure(figsize=(10, 4))
+    plt.plot(stock_df['date'], stock_df['close'], label='Close', alpha=0.7)
+    plt.plot(stock_df['date'], stock_df['MA50'], label='MA50', color='orange')
+    plt.plot(stock_df['date'], stock_df['MA200'], label='MA200', color='green')
+    plt.title(f'{stock} - Close & MAs')
+    plt.xlabel('Date')
+    plt.ylabel('Price')
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
+
+
